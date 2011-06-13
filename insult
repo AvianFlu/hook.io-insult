@@ -6,33 +6,36 @@ var insult = new Hook( {
   name: 'insult'
 });
 
-insult.connect();
+insult.start();
 
-insult.on('ready', function () {
-  var insults = [];
-  nconf.use('file', {file: './insults.json'});
-  nconf.load();
-  insults = nconf.get('insults');
-  insult.on('in.getInsult', function (event1, event2, name) {
-    var thisInsult = insults[Math.floor(Math.random() * insults.length)];
-    thisInsult = thisInsult.replace(/%%/, name);
-    insult.emit('out.getInsultResponse', thisInsult);
-    console.log(thisInsult);
-  });
-  insult.on('in.addInsult', function (event1, event2, newInsult) {
-    insults.push(newInsult);
-    nconf.save();
-    insult.emit('out.addInsultResponse', 'Insult successfully added.');
-    console.log(newInsult);
-  });
-  insult.on('in.removeInsult', function (event1, event2, rmInsult) {
-    insults = insults.filter(function (eachInsult) {
-      return eachInsult !== rmInsult;
-    });
-    insult.emit('out.removeInsultResponse', 'Insult Removed.');
-    nconf.set('insults', insults);
-    nconf.save();
-    console.log(insults);
-  });
+
+var insults = [];
+nconf.use('file', {file: './insults.json'});
+nconf.load();
+insults = nconf.get('insults');
+
+insult.on('i.getInsult.o.getInsult', function (event1, event2, name) {
+  var thisInsult = insults[Math.floor(Math.random() * insults.length)];
+  thisInsult = thisInsult.replace(/%%/, name);
+  insult.emit('out.getInsultResponse', thisInsult);
+  console.log(thisInsult);
 });
+
+insult.on('i.addInsult.o.addInsult', function (event1, event2, newInsult) {
+  insults.push(newInsult);
+  nconf.save();
+  insult.emit('out.addInsultResponse', 'Insult successfully added.');
+  console.log(newInsult);
+});
+
+insult.on('i.removeInsult.o.removeInsult', function (event1, event2, rmInsult) {
+  insults = insults.filter(function (eachInsult) {
+    return eachInsult !== rmInsult;
+  });
+  insult.emit('out.removeInsultResponse', 'Insult Removed.');
+  nconf.set('insults', insults);
+  nconf.save();
+  console.log(insults);
+});
+
 
