@@ -17,14 +17,14 @@ insults = nconf.get('insults');
 insult.on('i.getInsult.o.getInsult', function (event1, event2, name) {
   var thisInsult = insults[Math.floor(Math.random() * insults.length)];
   thisInsult = thisInsult.replace(/%%/, name);
-  insult.emit('out.getInsultResponse', thisInsult);
+  insult.emit('o.getInsultResponse', thisInsult);
   console.log(thisInsult);
 });
 
 insult.on('i.addInsult.o.addInsult', function (event1, event2, newInsult) {
   insults.push(newInsult);
   nconf.save();
-  insult.emit('out.addInsultResponse', 'Insult successfully added.');
+  insult.emit('o.addInsultResponse', 'Insult successfully added.');
   console.log(newInsult);
 });
 
@@ -32,7 +32,7 @@ insult.on('i.removeInsult.o.removeInsult', function (event1, event2, rmInsult) {
   insults = insults.filter(function (eachInsult) {
     return eachInsult !== rmInsult;
   });
-  insult.emit('out.removeInsultResponse', 'Insult Removed.');
+  insult.emit('o.removeInsultResponse', 'Insult Removed.');
   nconf.set('insults', insults);
   nconf.save();
   console.log(insults);
