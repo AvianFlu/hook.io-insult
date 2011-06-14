@@ -14,21 +14,21 @@ nconf.use('file', {file: './insults.json'});
 nconf.load();
 insults = nconf.get('insults');
 
-insult.on('i.getInsult.o.getInsult', function (event1, event2, name) {
+insult.on('i.getInsult', function (event, name) {
   var thisInsult = insults[Math.floor(Math.random() * insults.length)];
   thisInsult = thisInsult.replace(/%%/, name);
   insult.emit('o.getInsultResponse', thisInsult);
   console.log(thisInsult);
 });
 
-insult.on('i.addInsult.o.addInsult', function (event1, event2, newInsult) {
+insult.on('i.addInsult', function (event, newInsult) {
   insults.push(newInsult);
   nconf.save();
   insult.emit('o.addInsultResponse', 'Insult successfully added.');
   console.log(newInsult);
 });
 
-insult.on('i.removeInsult.o.removeInsult', function (event1, event2, rmInsult) {
+insult.on('i.removeInsult', function (event, rmInsult) {
   insults = insults.filter(function (eachInsult) {
     return eachInsult !== rmInsult;
   });
